@@ -32,7 +32,7 @@ KSeqCpp::KSeqCpp(const std::string& filename) : pImpl_(std::unique_ptr<Impl>(new
 
 KSeqCpp::~KSeqCpp() = default;
 KSeqCpp::KSeqCpp(KSeqCpp&& rhs) = default;
-KSeqCpp& KSeqCpp::operator=(KSeqCpp::KSeqCpp&& rhs) = default;
+KSeqCpp& KSeqCpp::operator=(KSeqCpp&& rhs) = default;
 
 bool KSeqCpp::isOpen() const noexcept {
 	if(pImpl_.get() == nullptr) return false;
