@@ -39,22 +39,21 @@ bool KSeqCpp::isOpen() const noexcept {
 	return pImpl_->fp != Z_NULL;
 }
 
-KSeqCpp::FastqRecord KSeqCpp::nextRecord() {
-	if(!isOpen()) throw Exception::FileNotOpenException();
+KSeqCpp::FastqRecord::u_ptr KSeqCpp::nextRecord() {
+	if(!isOpen()) throw Exceptions::FileNotOpenException();
 
 	int l = kseq_read(pImpl_->seq);
 
 	if(l < 0) {
 		pImpl_.reset(nullptr);
-		throw Exception::EndOfFileException();
+		throw Exceptions::EndOfFileException();
 	}
 
-	return FastqRecord {
-		std::string(pImpl_->seq->name.s),
-		pImpl_->seq->comment.l ? std::string(pImpl_->seq->comment.s) : "",
-		std::string(pImpl_->seq->seq.s),
-		pImpl_->seq->qual.l ? std::string(pImpl_->seq->qual.s) : "",
-	};
+	return FastqRecord::u_ptr(new FastqRecord {
+		.name = std::string(pImpl_->seq->name.s),
+		.comment = pImpl_->seq->comment.l ? std::string(pImpl_->seq->comment.s) : "",
+		.sequence = std::string(pImpl_->seq->seq.s),
+		.quality = pImpl_->seq->qual.l ? std::string(pImpl_->seq->qual.s) : ""});
 }
 
 

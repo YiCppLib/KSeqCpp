@@ -6,14 +6,14 @@ using namespace ::testing;
 
 class KSeqCppFixture : public Test {
 	protected:
-		KSeqCpp::upointer kSeqCppPlain;
-		KSeqCpp::upointer kSeqCppGzip;
-		KSeqCpp::upointer kSeqCppNonexist;
+		KSeqCpp::u_ptr kSeqCppPlain;
+		KSeqCpp::u_ptr kSeqCppGzip;
+		KSeqCpp::u_ptr kSeqCppNonexist;
 
 		KSeqCppFixture() : 
-			kSeqCppPlain(KSeqCpp::upointer(new KSeqCpp(TEST_DATADIR "/small.fastq"))),
-			kSeqCppGzip(KSeqCpp::upointer(new KSeqCpp(TEST_DATADIR "/small2.fastq.gz"))),
-			kSeqCppNonexist(KSeqCpp::upointer(new KSeqCpp(TEST_DATADIR "/nonexist"))) {
+			kSeqCppPlain(KSeqCpp::u_ptr(new KSeqCpp(TEST_DATADIR "/small.fastq"))),
+			kSeqCppGzip(KSeqCpp::u_ptr(new KSeqCpp(TEST_DATADIR "/small2.fastq.gz"))),
+			kSeqCppNonexist(KSeqCpp::u_ptr(new KSeqCpp(TEST_DATADIR "/nonexist"))) {
 				;
 			}
 };
@@ -36,31 +36,31 @@ TEST_F(KSeqCppFixture, CanDetectUnexistingFile) {
 
 TEST_F(KSeqCppFixture, CanReturnOneSeqFromPlain) {
 	auto seq = kSeqCppPlain->nextRecord();
-	ASSERT_THAT(seq.sequence.size(), Gt(0));
+	ASSERT_THAT(seq->sequence.size(), Gt(0));
 }
 
 TEST_F(KSeqCppFixture, CanReturnOneSeqFromGzip) {
 	auto seq = kSeqCppGzip->nextRecord();
-	ASSERT_THAT(seq.sequence.size(), Gt(0));
+	ASSERT_THAT(seq->sequence.size(), Gt(0));
 }
 
 TEST_F(KSeqCppFixture, WillThrowFileNotOpenException) {
 	EXPECT_THROW({
 			kSeqCppNonexist->nextRecord();
-			}, Exception::FileNotOpenException);
+			}, Exceptions::FileNotOpenException);
 }
 
 TEST_F(KSeqCppFixture, WillThrowEndOfFileException) {
 	EXPECT_THROW({
 			while(true) kSeqCppPlain->nextRecord();
-			}, Exception::EndOfFileException);
+			}, Exceptions::EndOfFileException);
 }
 
 TEST_F(KSeqCppFixture, WillReleaseFileAfterDepletion) {
 	try {
 		while(true) kSeqCppPlain->nextRecord();
 	}
-	catch(const Exception::EndOfFileException& e) {
+	catch(const Exceptions::EndOfFileException& e) {
 		ASSERT_FALSE(kSeqCppPlain->isOpen());
 	}
 }

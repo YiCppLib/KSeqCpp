@@ -7,8 +7,15 @@
 namespace YiCppLib {
 	class KSeqCpp {
 		public:
-			struct FastqRecord;
-			using upointer = std::unique_ptr<KSeqCpp>;
+			struct FastqRecord {
+				using u_ptr = std::unique_ptr<FastqRecord>;
+				const std::string name;
+				const std::string comment;
+				const std::string sequence;
+				const std::string quality;
+			};
+
+			using u_ptr = std::unique_ptr<KSeqCpp>;
 
 			KSeqCpp(const std::string& filename);
 
@@ -19,21 +26,14 @@ namespace YiCppLib {
 			KSeqCpp& operator=(KSeqCpp&& rhs);
 
 			bool isOpen() const noexcept;
-			FastqRecord nextRecord();
+			FastqRecord::u_ptr nextRecord();
 			
 		protected:
 			struct Impl;
 			std::unique_ptr<Impl> pImpl_;
 	};
 
-	struct KSeqCpp::FastqRecord {
-		const std::string name;
-		const std::string comment;
-		const std::string sequence;
-		const std::string quality;
-	};
-
-	namespace Exception {
+	namespace Exceptions {
 		class FileNotOpenException : public std::runtime_error {
 			public:
 				FileNotOpenException() : std::runtime_error("FASTA / FASTQ File Not Open") {;}
