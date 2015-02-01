@@ -55,13 +55,3 @@ TEST_F(KSeqCppFixture, WillThrowEndOfFileException) {
 			while(true) kSeqCppPlain->nextRecord();
 			}, Exceptions::EndOfFileException);
 }
-
-TEST_F(KSeqCppFixture, WillReleaseFileAfterDepletion) {
-	try {
-		while(true) kSeqCppPlain->nextRecord();
-	}
-	catch(const Exceptions::EndOfFileException& e) {
-		ASSERT_FALSE(kSeqCppPlain->isOpen());
-	}
-}
-

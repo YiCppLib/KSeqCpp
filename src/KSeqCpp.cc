@@ -45,7 +45,6 @@ KSeqCpp::FastqRecord::u_ptr KSeqCpp::nextRecord() {
 	int l = kseq_read(pImpl_->seq);
 
 	if(l < 0) {
-		pImpl_.reset(nullptr);
 		throw Exceptions::EndOfFileException();
 	}
 
