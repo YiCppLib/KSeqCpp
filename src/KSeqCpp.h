@@ -17,6 +17,7 @@ namespace YiCppLib {
 
 			using u_ptr = std::unique_ptr<KSeqCpp>;
 
+            KSeqCpp();
 			KSeqCpp(const std::string& filename);
 
 			// following three function needs to be 

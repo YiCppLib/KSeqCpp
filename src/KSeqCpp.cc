@@ -12,6 +12,12 @@ struct KSeqCpp::Impl {
 	gzFile fp;
 	kseq_t *seq;
 
+    Impl():
+        filename(NULL)
+    {
+        fp = gzdopen(fileno(stdin), "r");
+        if(fp != Z_NULL) seq = kseq_init(fp);
+    }
 
 	Impl(const char *filename) : 
 		filename(filename) 
@@ -26,6 +32,10 @@ struct KSeqCpp::Impl {
 		}
 	}
 };
+
+
+KSeqCpp::KSeqCpp() : pImpl_(std::unique_ptr<Impl>(new Impl())) {
+}
 
 KSeqCpp::KSeqCpp(const std::string& filename) : pImpl_(std::unique_ptr<Impl>(new Impl(filename.c_str()))) {
 }
