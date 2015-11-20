@@ -3,6 +3,8 @@
 #include <zlib.h>
 #include <iostream>
 
+#include <cstdio>
+
 KSEQ_INIT(gzFile, gzread);
 
 using namespace YiCppLib;
